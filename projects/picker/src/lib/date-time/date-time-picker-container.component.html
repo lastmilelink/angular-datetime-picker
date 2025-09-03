@@ -26,6 +26,13 @@
             (selectedChange)="dateSelected($event)"
         ></owl-date-time-calendar>
     }
+
+    @if (agendasForSelectedDate.length > 0) {
+        <owl-date-time-agenda-list
+            [agendas]="agendasForSelectedDate"
+        ></owl-date-time-agenda-list>
+    }
+
     @if (pickerType === 'both' || pickerType === 'timer') {
         <owl-date-time-timer
             class="owl-dt-container-row"

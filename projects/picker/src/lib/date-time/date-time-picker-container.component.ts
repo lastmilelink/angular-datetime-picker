@@ -12,6 +12,7 @@ import {
     OnInit,
     Optional,
     ViewChild,
+    OnDestroy,
 } from '@angular/core';
 import { AnimationEvent } from '@angular/animations';
 import { OwlDateTimeIntl } from './date-time-picker-intl.service';
@@ -28,6 +29,7 @@ import {
     SPACE,
     UP_ARROW,
 } from '@angular/cdk/keycodes';
+import { CalendarAgenda } from './calendar-agenda.class';
 
 @Component({
     exportAs: 'owlDateTimeContainer',
@@ -63,6 +65,11 @@ export class OwlDateTimeContainerComponent<T>
 
     public picker: OwlDateTime<T>;
     public activeSelectedIndex = 0; // The current active SelectedIndex in range select mode (0: 'from', 1: 'to')
+
+    /**
+     * The list of agendas for the selected date.
+     * */
+    public agendasForSelectedDate: CalendarAgenda[] = [];
 
     // retain start and end time
     private retainStartTime: T;
@@ -238,6 +245,8 @@ export class OwlDateTimeContainerComponent<T>
 
     public ngAfterViewInit(): void {
         this.focusPicker();
+        this.setActiveSelectedIndex(0);
+        this.filterAgendasForSelectedDate(this.picker.selected);
     }
 
     public handleContainerAnimationStart(event: AnimationEvent): void {
@@ -267,6 +276,7 @@ export class OwlDateTimeContainerComponent<T>
                     this.hidePicker$.next(null);
                 }
             }
+            this.filterAgendasForSelectedDate(result || date);
             return;
         }
 
@@ -277,6 +287,7 @@ export class OwlDateTimeContainerComponent<T>
                 this.picker.select(result);
             }
         }
+        this.filterAgendasForSelectedDate(date);
     }
 
     public timeSelected(time: T): void {
@@ -560,5 +571,19 @@ export class OwlDateTimeContainerComponent<T>
         } else if (this.timer) {
             this.timer.focus();
         }
+    }
+
+    private filterAgendasForSelectedDate(date: T): void {
+        if (!date || !this.picker.agendas) {
+            this.agendasForSelectedDate = [];
+            return;
+        }
+
+        this.agendasForSelectedDate = this.picker.agendas.filter(agenda => {
+            const agendaDate = this.dateTimeAdapter.deserialize(agenda.start);
+            return !!agendaDate && this.dateTimeAdapter.isSameDay(agendaDate, date);
+        });
+
+        this.cdRef.markForCheck();
     }
 }

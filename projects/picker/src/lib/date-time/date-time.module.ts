@@ -22,6 +22,11 @@ import { OwlCalendarComponent } from './calendar.component';
 import { OwlDateTimeInlineComponent } from './date-time-inline.component';
 import { OwlDialogModule } from '../dialog/dialog.module';
 import { optionsProviders } from './options-provider';
+import { OwlAgendaListComponent } from './agenda-list.component';
+
+export function OWL_DATETIME_EN_INTL_FACTORY() {
+    return new OwlDateTimeIntl();
+}
 
 @NgModule({
     imports: [CommonModule, OverlayModule, OwlDialogModule, A11yModule],
@@ -50,6 +55,7 @@ import { optionsProviders } from './options-provider';
         OwlCalendarBodyComponent,
         NumberFixedLenPipe,
         OwlDateTimeInlineComponent,
+        OwlAgendaListComponent
     ],
     providers: [
         OwlDateTimeIntl,

@@ -31,26 +31,32 @@ export class AppComponent {
   protected agendas: CalendarAgenda[] = [];
 
   constructor() {
+    const now = new Date();
+    const yesterday = new Date(new Date().setDate(now.getDate() - 1));
     const today = new Date();
-    const yesterday = new Date(Date.now() - ONE_DAY);
-    const tomorrow = new Date(Date.now() + ONE_DAY);
-    const dayAfterTomorrow = new Date(Date.now() + 2 * ONE_DAY);
+    const tomorrow = new Date(new Date().setDate(now.getDate() + 1));
+    const dayAfterTomorrow = new Date(new Date().setDate(now.getDate() + 2));
 
     this.agendas = [
       // Yesterday
-      { start: yesterday, end: yesterday },
+      { start: new Date(yesterday.setHours(10, 0, 0, 0)), end: new Date(yesterday.setHours(11, 0, 0, 0)) },
 
       // Today
-      { start: today, end: today },
-      { start: today, end: today },
-      { start: today, end: today },
+      { start: new Date(today.setHours(9, 0, 0, 0)), end: new Date(today.setHours(10, 30, 0, 0)) },
+      { start: new Date(today.setHours(14, 0, 0, 0)), end: new Date(today.setHours(15, 0, 0, 0)) },
+      { start: new Date(today.setHours(16, 30, 0, 0)), end: new Date(today.setHours(17, 0, 0, 0)) },
 
       // Tomorrow
-      { start: tomorrow, end: tomorrow },
-      { start: tomorrow, end: tomorrow },
+      { start: new Date(tomorrow.setHours(11, 0, 0, 0)), end: new Date(tomorrow.setHours(12, 0, 0, 0)) },
+      { start: new Date(tomorrow.setHours(15, 30, 0, 0)), end: new Date(tomorrow.setHours(16, 0, 0, 0)) },
 
       // Day after tomorrow
-      ...Array.from({ length: 10 }, () => ({ start: dayAfterTomorrow, end: dayAfterTomorrow }))
+      ...Array.from({ length: 10 }, (_, i) => {
+          const startHour = 8 + i;
+          const start = new Date(dayAfterTomorrow.setHours(startHour, 0, 0, 0));
+          const end = new Date(dayAfterTomorrow.setHours(startHour, 30, 0, 0));
+          return { start, end };
+      })
     ];
   }
 

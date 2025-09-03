@@ -1,0 +1,10 @@
+<div class="owl-dt-agenda-list">
+    @for (agenda of agendas; track agenda) {
+        <div class="owl-dt-agenda-item">
+            <span class="owl-dt-agenda-item__icon"></span>
+            <span class="owl-dt-agenda-item__time">
+                {{ formatTime(agenda.start) }} - {{ formatTime(agenda.end) }}
+            </span>
+        </div>
+    }
+</div>
