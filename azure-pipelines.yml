@@ -142,14 +142,18 @@ stages:
           Write-Host "##vso[task.setvariable variable=packageVersion]$packageVersion"
           Write-Host "##vso[task.setvariable variable=npmTag]$npmTag"
     
+    - task: npmAuthenticate@0
+      displayName: 'Authenticate with npm'
+      inputs:
+        workingFile: '.npmrc'
+        customEndpoint: ''
+    
     - task: Npm@1
       displayName: 'Publish to NPM'
       inputs:
         command: 'custom'
         customCommand: 'publish --tag $(npmTag) --access public'
         workingDir: '.'
-      env:
-        NODE_AUTH_TOKEN: $(NPM_TOKEN)
     
     - task: PowerShell@2
       displayName: 'Log published package info'
