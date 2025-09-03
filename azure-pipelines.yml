@@ -1,8 +1,7 @@
 trigger:
   branches:
     include:
-      - main
-      - develop
+      - '*'  # Trigger on all branches
   paths:
     exclude:
       - README.md
@@ -11,8 +10,16 @@ trigger:
 pr:
   branches:
     include:
-      - main
-      - develop
+      - '*'  # Trigger on PRs to all branches
+
+# Trigger on git tags for stable releases
+resources:
+  repositories:
+  - repository: self
+    trigger:
+      tags:
+        include:
+          - '*'  # Trigger on all tags
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -20,6 +27,10 @@ pool:
 variables:
   nodeVersion: '20.x'
   npmVersion: '10.x'
+  npmOrg: 'softint'
+  # These will be set dynamically based on build type
+  packageVersion: ''
+  npmTag: ''
 
 stages:
 - stage: Build
@@ -60,3 +71,96 @@ stages:
         pathToPublish: 'dist'
         artifactName: 'dist'
         publishLocation: 'Container'
+
+- stage: Publish
+  displayName: 'Publish to NPM'
+  dependsOn: Build
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+  jobs:
+  - job: PublishJob
+    displayName: 'Publish Package'
+    steps:
+    
+    - task: NodeTool@0
+      displayName: 'Install Node.js'
+      inputs:
+        versionSpec: $(nodeVersion)
+    
+    - task: Npm@1
+      displayName: 'Install npm dependencies'
+      inputs:
+        command: 'install'
+        workingDir: '.'
+    
+    - task: DownloadBuildArtifacts@0
+      displayName: 'Download build artifacts'
+      inputs:
+        buildType: 'current'
+        artifactName: 'dist'
+        downloadPath: '.'
+    
+    - task: PowerShell@2
+      displayName: 'Determine version and update package.json'
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Get build information
+          $branchName = "$(Build.SourceBranchName)"
+          $commitHash = "$(Build.SourceVersion)".Substring(0, 7)
+          $sourceBranch = "$(Build.SourceBranch)"
+          
+          Write-Host "Branch Name: $branchName"
+          Write-Host "Commit Hash: $commitHash"
+          Write-Host "Source Branch: $sourceBranch"
+          
+          # Sanitize branch name for npm tag (remove invalid characters)
+          $sanitizedBranchName = $branchName -replace '[^a-zA-Z0-9\-]', '-'
+          $sanitizedBranchName = $sanitizedBranchName -replace '^-+|-+$', ''
+          if ($sanitizedBranchName -eq '') { $sanitizedBranchName = 'dev' }
+          
+          # Determine version and tag
+          if ($sourceBranch -like "refs/tags/*") {
+            $packageVersion = $branchName
+            $npmTag = "latest"
+            Write-Host "Stable release: $packageVersion"
+          } else {
+            $packageVersion = "0.0.0-$sanitizedBranchName.$commitHash"
+            $npmTag = $sanitizedBranchName
+            Write-Host "Development build: $packageVersion (tag: $npmTag)"
+          }
+          
+          # Update package.json
+          $packageJsonPath = "package.json"
+          $packageJson = Get-Content $packageJsonPath | ConvertFrom-Json
+          $packageJson.version = $packageVersion
+          $packageJson | ConvertTo-Json -Depth 10 | Set-Content $packageJsonPath
+          
+          Write-Host "Updated package.json version to: $packageVersion"
+          Write-Host "NPM tag will be: $npmTag"
+          
+          # Set variables for npm publish
+          Write-Host "##vso[task.setvariable variable=packageVersion]$packageVersion"
+          Write-Host "##vso[task.setvariable variable=npmTag]$npmTag"
+    
+    - task: Npm@1
+      displayName: 'Publish to NPM'
+      inputs:
+        command: 'custom'
+        customCommand: 'publish --tag $(npmTag) --access public'
+        workingDir: '.'
+      env:
+        NODE_AUTH_TOKEN: $(NPM_TOKEN)
+    
+    - task: PowerShell@2
+      displayName: 'Log published package info'
+      inputs:
+        targetType: 'inline'
+        script: |
+          Write-Host "Published package: @$(npmOrg)/angular-datetime-picker@$(packageVersion)"
+          Write-Host "NPM tag: $(npmTag)"
+          if ("$(isStableRelease)" -eq "true") {
+            Write-Host "This is a stable release"
+          } else {
+            Write-Host "This is a development build"
+            Write-Host "Install with: npm install @$(npmOrg)/angular-datetime-picker@$(packageVersion)"
+          }
