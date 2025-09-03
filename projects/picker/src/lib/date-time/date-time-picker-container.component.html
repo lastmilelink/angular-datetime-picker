@@ -33,7 +33,7 @@
         ></owl-date-time-agenda-list>
     }
 
-    @if (pickerType === 'both' || pickerType === 'timer') {
+    @if ((pickerType === 'both' || pickerType === 'timer') && !picker.viewOnly) {
         <owl-date-time-timer
             class="owl-dt-container-row"
             [pickerMoment]="pickerMoment"
@@ -102,7 +102,7 @@
             </div>
         </div>
     }
-    @if (showControlButtons) {
+    @if (showControlButtons && !picker.viewOnly) {
         <div class="owl-dt-container-buttons owl-dt-container-row">
             <button
                 class="owl-dt-control owl-dt-control-button owl-dt-container-control-button"

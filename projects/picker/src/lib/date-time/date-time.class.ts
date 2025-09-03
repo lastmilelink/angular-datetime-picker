@@ -64,6 +64,12 @@ export abstract class OwlDateTime<T> {
     public agendas: CalendarAgenda[] = [];
 
     /**
+     * Whether the picker is in view-only mode (hides cancel/set buttons and time picker)
+     * */
+    @Input()
+    public viewOnly = false;
+
+    /**
      * The view that the calendar should start in.
      */
     @Input()

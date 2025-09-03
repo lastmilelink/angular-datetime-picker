@@ -15,6 +15,11 @@
     [class.active]="currentTab() === 'date-range-with-agenda'">
     Date with Agenda:
   </button>
+  <button
+    (click)="currentTab.set('view-only-agenda')"
+    [class.active]="currentTab() === 'view-only-agenda'">
+    View Only Agenda:
+  </button>
 </div>
 
 <main>
@@ -68,6 +73,28 @@
             #date_agenda_component
             [startAt]="selectedDateWithAgenda"
             [agendas]="agendas"
+            (afterPickerClosed)="selectedTrigger($event)"
+            (dateSelected)="selectedTrigger($event)">
+        </owl-date-time>
+    }
+    @case ('view-only-agenda') {
+        <label for="viewonlyagenda">
+            View Only Agenda (no time picker, no buttons):
+        </label>
+
+        <input
+            [(ngModel)]="selectedDateWithAgenda"
+            [selectMode]="'single'"
+            [owlDateTimeTrigger]="view_only_agenda_component"
+            [owlDateTime]="view_only_agenda_component"
+            style="width: 100%; color: cornflowerblue"
+            id="viewonlyagenda">
+
+        <owl-date-time
+            #view_only_agenda_component
+            [startAt]="selectedDateWithAgenda"
+            [agendas]="agendas"
+            [viewOnly]="true"
             (afterPickerClosed)="selectedTrigger($event)"
             (dateSelected)="selectedTrigger($event)">
         </owl-date-time>
