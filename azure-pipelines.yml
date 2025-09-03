@@ -162,11 +162,11 @@ stages:
       inputs:
         targetType: 'inline'
         script: |
-          Write-Host "Published package: @$(npmOrg)/angular-datetime-picker@$(packageVersion)"
+          Write-Host "Published package: @rifansi/angular-datetime-picker@$(packageVersion)"
           Write-Host "NPM tag: $(npmTag)"
-          if ("$(isStableRelease)" -eq "true") {
+          if ("$(Build.SourceBranch)" -like "refs/tags/*") {
             Write-Host "This is a stable release"
           } else {
             Write-Host "This is a development build"
-            Write-Host "Install with: npm install @$(npmOrg)/angular-datetime-picker@$(packageVersion)"
+            Write-Host "Install with: npm install @rifansi/angular-datetime-picker@$(packageVersion)"
           }
