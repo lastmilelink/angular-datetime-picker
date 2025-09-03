@@ -152,8 +152,10 @@ stages:
       displayName: 'Publish to NPM'
       inputs:
         command: 'custom'
-        customCommand: 'publish --tag $(npmTag) --access public'
+        customCommand: 'publish --tag $(npmTag) --access public --registry https://registry.npmjs.org/'
         workingDir: '.'
+      env:
+        NPM_TOKEN: $(NPM_TOKEN)
     
     - task: PowerShell@2
       displayName: 'Log published package info'
