@@ -10,6 +10,11 @@
     [class.active]="currentTab() === 'date-time-inline'">
     DateTime Range (Inline):
   </button>
+  <button
+    (click)="currentTab.set('date-range-with-agenda')"
+    [class.active]="currentTab() === 'date-range-with-agenda'">
+    Date Range with Agenda:
+  </button>
 </div>
 
 <main>
@@ -44,6 +49,28 @@
         selectMode="range"
         pickerType="both">
       </owl-date-time-inline>
+    }
+
+    @case ('date-range-with-agenda') {
+        <label for="dateagenda">
+            Datetime with agenda:
+        </label>
+
+        <input
+            [(ngModel)]="selectedDateWithAgenda"
+            [selectMode]="'single'"
+            [owlDateTimeTrigger]="date_agenda_component"
+            [owlDateTime]="date_agenda_component"
+            style="width: 100%; color: cornflowerblue"
+            id="dateagenda">
+
+        <owl-date-time
+            #date_agenda_component
+            [startAt]="selectedDateWithAgenda"
+            [agendas]="agendas"
+            (afterPickerClosed)="selectedTrigger($event)"
+            (dateSelected)="selectedTrigger($event)">
+        </owl-date-time>
     }
   }
 </main>

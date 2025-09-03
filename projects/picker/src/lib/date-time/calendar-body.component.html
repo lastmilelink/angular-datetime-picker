@@ -32,6 +32,11 @@
                 >
                     {{ item.displayValue }}
                 </span>
+                <div class="owl-dt-calendar-cell-agendas">
+                    @for (agenda of item.agendas; track agenda) {
+                        <div class="owl-dt-calendar-cell-agenda"></div>
+                    }
+                </div>
             </td>
         }
     </tr>

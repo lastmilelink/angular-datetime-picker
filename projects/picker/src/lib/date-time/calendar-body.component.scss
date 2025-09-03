@@ -1,0 +1,17 @@
+
+.owl-dt-calendar-cell-agendas {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    bottom: 4px;
+    gap: 2px;
+    width: 100%;
+}
+
+.owl-dt-calendar-cell-agenda {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--owl-dt-agenda-color, #1B8E40);
+}
