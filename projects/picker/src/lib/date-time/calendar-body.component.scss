@@ -6,12 +6,25 @@
     position: absolute;
     bottom: 4px;
     gap: 2px;
-    width: 100%;
+    width: 80%;
+    left: 10%;
+    right: 10%;
 }
 
 .owl-dt-calendar-cell-agenda {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
+    height: 5px;
+    border-radius: 2px;
     background-color: var(--owl-dt-agenda-color, #1B8E40);
+}
+
+.owl-dt-calendar-cell-agenda--more {
+    width: auto;
+    background-color: transparent;
+}
+
+.owl-dt-calendar-cell-agenda--more::after {
+    content: '...';
+    color: var(--owl-dt-agenda-color, #1B8E40);
+    font-size: 14px;
+    line-height: 4px;
 }
