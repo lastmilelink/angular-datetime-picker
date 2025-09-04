@@ -60,6 +60,23 @@ stages:
         customCommand: 'run package_linux'
         workingDir: '.'
     
+    - task: PowerShell@2
+      displayName: 'Create missing files to match original structure'
+      inputs:
+        targetType: 'inline'
+        script: |
+          # Create lib folder by copying from projects/picker/src/lib
+          if (Test-Path "projects/picker/src/lib") {
+            Copy-Item "projects/picker/src/lib" "dist/picker/" -Recurse -Force
+            Write-Host "Created lib folder from projects/picker/src/lib"
+          }
+          
+          # Create public_api.d.ts by copying from projects/picker/src/public_api.ts
+          if (Test-Path "projects/picker/src/public_api.ts") {
+            Copy-Item "projects/picker/src/public_api.ts" "dist/picker/public_api.d.ts" -Force
+            Write-Host "Created public_api.d.ts from projects/picker/src/public_api.ts"
+          }
+    
     - task: PublishBuildArtifacts@1
       displayName: 'Publish build artifacts'
       inputs:
