@@ -14,6 +14,7 @@ import {
 } from '@angular/core';
 import { SelectMode } from './date-time.class';
 import { take } from 'rxjs/operators';
+import { CalendarAgenda } from './calendar-agenda.class';
 
 export class CalendarCell {
     constructor(
@@ -22,7 +23,8 @@ export class CalendarCell {
         public ariaLabel: string,
         public enabled: boolean,
         public out: boolean = false,
-        public cellClass: string = ''
+        public cellClass: string = '',
+        public agendas: CalendarAgenda[] = []
     ) {}
 }
 

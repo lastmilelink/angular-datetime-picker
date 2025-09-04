@@ -59,6 +59,62 @@ This picker is responsive design, so feel free to try it in your desktops, table
     The examples above are quite basic. The picker has much more features,
     and you could learn more about those from [demo page](https://danielykpan.github.io/date-time-picker/).
 
+## Agenda Indicators
+
+The date-time picker supports agenda indicators, which are visual indicators that can be added to the calendar to highlight specific events or periods.
+
+```typescript
+import { Component } from '@angular/core';
+
+export interface CalendarAgenda {
+    start: Date;
+    end: Date;
+}
+
+@Component({
+    ...
+})
+export class YourComponent {
+    public agendas: CalendarAgenda[] = [
+        {
+            start: new Date(new Date().setHours(9, 0, 0, 0)),
+            end: new Date(new Date().setHours(10, 0, 0, 0)),
+        },
+        ...
+    ];
+}
+```
+
+The color of the agenda indicators can be customized via the CSS custom property `--owl-dt-agenda-color`.
+
+```css
+:root {
+    --owl-dt-agenda-color: #E91E63; // Changes the agenda indicator color to pink
+}
+```
+
+## View-Only Mode
+
+The date-time picker supports a view-only mode that is perfect for agenda browsing without date selection. When `viewOnly` is set to `true`:
+
+- **Cancel and Set buttons are hidden** - Users cannot confirm or cancel date selection
+- **Time picker is hidden** - Only the calendar is shown for date browsing
+- **Agenda indicators remain visible** - Users can still see agenda items on calendar days
+- **Agenda list remains functional** - Users can click on dates to view agenda details
+
+This mode is ideal for:
+- **Event calendars** - Browse events without selecting dates
+- **Schedule viewers** - View schedules without making changes
+- **Read-only dashboards** - Display agenda information without interaction
+
+```typescript
+<owl-date-time
+    [agendas]="agendas"
+    [viewOnly]="true"
+    (dateSelected)="onDateSelected($event)">
+</owl-date-time>
+```
+
 ## Animation
 
 This picker uses angular animations to improve the user experience,
@@ -129,6 +185,8 @@ There are two pre-made modules, users need to import one of them or build your o
 | `disabled`          | boolean                       | Optional | `false`               | When specify to true, it would disable the picker.                                                                                           |
 | `backdropClass`     | string/string[]               | Optional | `null`                | Custom class for the picker backdrop.                                                                                                        |
 | `panelClass`        | string/string[]               | Optional | `null`                | Custom class for the picker overlay panel.                                                                                                   |
+| `agendas`           | `CalendarAgenda[]`            | Optional | `[]`                  | An array of agenda items to be displayed as indicators on the calendar.                                                                      |
+| `viewOnly`          | `boolean`                     | Optional | `false`               | When set to true, hides the cancel/set buttons and time picker, making it view-only for agenda browsing.                                    |
 
 ## Events for `owl-date-time`
 

@@ -32,6 +32,15 @@
                 >
                     {{ item.displayValue }}
                 </span>
+                <div class="owl-dt-calendar-cell-agendas">
+                    @for (agenda of item.agendas.slice(0, 3); track agenda; let i = $index) {
+                        <div
+                            class="owl-dt-calendar-cell-agenda"
+                            [class.owl-dt-calendar-cell-agenda--more]="i === 2 && item.agendas.length > 3"
+                            [style.width.%]="100 / (item.agendas.length > 3 ? 3 : item.agendas.length)"
+                        ></div>
+                    }
+                </div>
             </td>
         }
     </tr>

@@ -24,6 +24,7 @@ import {OWL_DATE_TIME_FORMATS, OwlDateTimeFormats} from './adapter/date-time-for
 import {DateView, DateViewType, SelectMode} from './date-time.class';
 import {take} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
+import { CalendarAgenda } from './calendar-agenda.class';
 
 @Component({
     selector: 'owl-date-time-calendar',
@@ -41,6 +42,12 @@ export class OwlCalendarComponent<T>
     implements OnInit, AfterContentInit, AfterViewChecked, OnDestroy {
 
     DateView = DateView;
+
+    /**
+     * Set the agenda list
+     * */
+    @Input()
+    public agendas: CalendarAgenda[] = [];
 
     @Input()
     get minDate(): T | null {

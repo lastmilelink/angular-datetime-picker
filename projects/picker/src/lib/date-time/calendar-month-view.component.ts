@@ -39,6 +39,7 @@ import {
     UP_ARROW
 } from '@angular/cdk/keycodes';
 import { getLocaleFirstDayOfWeek } from '@angular/common';
+import { CalendarAgenda } from './calendar-agenda.class';
 
 const DAYS_PER_WEEK = 7;
 const WEEKS_PER_VIEW = 6;
@@ -57,6 +58,12 @@ const WEEKS_PER_VIEW = 6;
 })
 export class OwlMonthViewComponent<T>
     implements OnInit, AfterContentInit, OnDestroy {
+    /**
+     * Set the agenda list
+     * */
+    @Input()
+    public agendas: CalendarAgenda[] = [];
+
     /**
      * Whether to hide dates in other months at the start or end of the current month.
      * */
@@ -591,13 +598,19 @@ export class OwlMonthViewComponent<T>
         const out = dayValue < 1 || dayValue > daysInMonth;
         const cellClass = 'owl-dt-day-' + this.dateTimeAdapter.getDay(date);
 
+        const agendas = this.agendas.filter(agenda => {
+            const agendaDate = this.dateTimeAdapter.deserialize(agenda.start);
+            return !!agendaDate && this.dateTimeAdapter.isSameDay(agendaDate, date);
+        });
+
         return new CalendarCell(
             dayValue,
             dateName,
             ariaLabel,
             enabled,
             out,
-            cellClass
+            cellClass,
+            agendas
         );
     }
 

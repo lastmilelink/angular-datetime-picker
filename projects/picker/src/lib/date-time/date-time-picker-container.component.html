@@ -7,6 +7,7 @@
         <owl-date-time-calendar
             class="owl-dt-container-row"
             [firstDayOfWeek]="picker.firstDayOfWeek"
+            [agendas]="picker.agendas"
             [(pickerMoment)]="pickerMoment"
             [selected]="picker.selected"
             [selecteds]="picker.selecteds"
@@ -25,7 +26,14 @@
             (selectedChange)="dateSelected($event)"
         ></owl-date-time-calendar>
     }
-    @if (pickerType === 'both' || pickerType === 'timer') {
+
+    @if (agendasForSelectedDate.length > 0) {
+        <owl-date-time-agenda-list
+            [agendas]="agendasForSelectedDate"
+        ></owl-date-time-agenda-list>
+    }
+
+    @if ((pickerType === 'both' || pickerType === 'timer') && !picker.viewOnly) {
         <owl-date-time-timer
             class="owl-dt-container-row"
             [pickerMoment]="pickerMoment"
@@ -94,7 +102,7 @@
             </div>
         </div>
     }
-    @if (showControlButtons) {
+    @if (showControlButtons && !picker.viewOnly) {
         <div class="owl-dt-container-buttons owl-dt-container-row">
             <button
                 class="owl-dt-control owl-dt-control-button owl-dt-container-control-button"

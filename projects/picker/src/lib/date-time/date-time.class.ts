@@ -11,6 +11,7 @@ import {
     OWL_DATE_TIME_FORMATS,
     OwlDateTimeFormats
 } from './adapter/date-time-format.class';
+import { CalendarAgenda } from './calendar-agenda.class';
 
 let nextUniqueId = 0;
 
@@ -55,6 +56,18 @@ export abstract class OwlDateTime<T> {
     set hour12Timer(val: boolean) {
         this._hour12Timer = coerceBooleanProperty(val);
     }
+
+    /**
+     * Set the agenda list
+     * */
+    @Input()
+    public agendas: CalendarAgenda[] = [];
+
+    /**
+     * Whether the picker is in view-only mode (hides cancel/set buttons and time picker)
+     * */
+    @Input()
+    public viewOnly = false;
 
     /**
      * The view that the calendar should start in.
