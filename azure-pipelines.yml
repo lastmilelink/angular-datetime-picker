@@ -7,11 +7,6 @@ trigger:
       - README.md
       - .gitignore
 
-pr:
-  branches:
-    include:
-      - '*'  # Trigger on PRs to all branches
-
 # Trigger on git tags for stable releases
 resources:
   repositories:
@@ -59,10 +54,10 @@ stages:
         workingDir: '.'
     
     - task: Npm@1
-      displayName: 'Build library'
+      displayName: 'Build and package library'
       inputs:
         command: 'custom'
-        customCommand: 'run build'
+        customCommand: 'run package_linux'
         workingDir: '.'
     
     - task: PublishBuildArtifacts@1
@@ -99,6 +94,13 @@ stages:
         artifactName: 'dist'
         downloadPath: '.'
     
+    - task: CopyFiles@2
+      displayName: 'Copy .npmrc to dist/picker'
+      inputs:
+        sourceFolder: '.'
+        contents: '.npmrc'
+        targetFolder: 'dist/picker'
+    
     - task: PowerShell@2
       displayName: 'Determine version and update package.json'
       inputs:
@@ -129,8 +131,8 @@ stages:
             Write-Host "Development build: $packageVersion (tag: $npmTag)"
           }
           
-          # Update package.json
-          $packageJsonPath = "package.json"
+          # Update package.json in dist/picker directory
+          $packageJsonPath = "dist/picker/package.json"
           $packageJson = Get-Content $packageJsonPath | ConvertFrom-Json
           $packageJson.version = $packageVersion
           $packageJson | ConvertTo-Json -Depth 10 | Set-Content $packageJsonPath
@@ -153,7 +155,7 @@ stages:
       inputs:
         command: 'custom'
         customCommand: 'publish --tag $(npmTag) --access public --registry https://registry.npmjs.org/'
-        workingDir: '.'
+        workingDir: 'dist/picker'
       env:
         NPM_TOKEN: $(NPM_TOKEN)
     

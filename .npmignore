@@ -1,0 +1,67 @@
+# Source files - only publish compiled library
+src/
+projects/
+e2e/
+*.ts
+*.tsx
+*.js
+*.jsx
+!dist/picker/**/*.js
+!dist/picker/**/*.mjs
+
+# Build configurations
+angular.json
+tsconfig*.json
+karma.conf.js
+protractor.conf.js
+.eslintrc.js
+.prettierrc
+.browserslistrc
+.editorconfig
+
+# Development files
+azure-pipelines.yml
+.travis.yml
+.github/
+.vscode/
+.idea/
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Build outputs (except the compiled library)
+dist/
+!dist/picker/
+tmp/
+out-tsc/
+.angular/
+.cache/
+
+# Test files
+*.spec.ts
+*.test.ts
+coverage/
+.nyc_output/
+
+# Documentation (keep README.md)
+PUBLISHING.md
+LICENSE
+
+# System files
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE files
+*.swp
+*.swo
+*~
+
+# Environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
