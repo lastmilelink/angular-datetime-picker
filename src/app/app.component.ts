@@ -22,8 +22,8 @@ export class AppComponent {
   protected readonly currentTab = signal<string>('date-range');
 
   protected selectedDates: [Date, Date] = [
-    new Date('2025-09-02T10:26:00'),
-    new Date('2025-09-04T10:26:00')
+    new Date(new Date().setDate(new Date().getDate() + 1)), // Tomorrow
+    new Date(new Date().setDate(new Date().getDate() + 3))  // Day after tomorrow + 1
   ];
 
   protected selectedDateWithAgenda = new Date();
