@@ -20,6 +20,11 @@
     [class.active]="currentTab() === 'view-only-agenda'">
     View Only Agenda:
   </button>
+  <button
+    (click)="currentTab.set('month-change-demo')"
+    [class.active]="currentTab() === 'month-change-demo'">
+    Month Change Event:
+  </button>
 </div>
 
 <main>
@@ -98,6 +103,29 @@
             (afterPickerClosed)="selectedTrigger($event)"
             (dateSelected)="selectedTrigger($event)">
         </owl-date-time>
+    }
+    @case ('month-change-demo') {
+      <label for="monthchangedemo">
+        Month Change Event Demo (check console for month change events):
+      </label>
+      <div style="margin-bottom: 10px; padding: 10px; background-color: #f0f0f0; border-radius: 4px;">
+        <strong>Current Month:</strong> {{ currentMonth | date:'MMMM yyyy' }}
+      </div>
+      <input
+        [(ngModel)]="selectedDateWithAgenda"
+        [selectMode]="'single'"
+        [owlDateTimeTrigger]="month_change_demo_component"
+        [owlDateTime]="month_change_demo_component"
+        style="width: 100%; color: cornflowerblue"
+        id="monthchangedemo">
+      <owl-date-time
+        #month_change_demo_component
+        [startAt]="selectedDateWithAgenda"
+        [agendas]="agendas"
+        (afterPickerClosed)="selectedTrigger($event)"
+        (dateSelected)="selectedTrigger($event)"
+        (monthChanged)="onMonthChanged($event)">
+      </owl-date-time>
     }
   }
 </main>

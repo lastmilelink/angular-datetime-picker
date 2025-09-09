@@ -200,6 +200,8 @@ export abstract class OwlDateTime<T> {
 
     abstract monthSelected: EventEmitter<T>;
 
+    abstract monthChanged: EventEmitter<T>;
+
     abstract dateSelected: EventEmitter<T>;
 
     abstract selectYear(normalizedYear: T): void;

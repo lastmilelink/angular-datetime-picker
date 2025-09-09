@@ -253,6 +253,12 @@ export class OwlDateTimeComponent<T> extends OwlDateTime<T>
     monthSelected = new EventEmitter<T>();
 
     /**
+     * Emits when the current viewing month changes (navigation, month selection)
+     * */
+    @Output()
+    monthChanged = new EventEmitter<T>();
+
+    /**
      * Emits selected date
      * */
     @Output()

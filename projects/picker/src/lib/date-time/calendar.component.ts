@@ -291,6 +291,12 @@ export class OwlCalendarComponent<T>
     @Output()
     readonly monthSelected = new EventEmitter<T>();
 
+    /**
+     * Emits when the current viewing month changes (navigation, month selection)
+     * */
+    @Output()
+    readonly monthChanged = new EventEmitter<T>();
+
     private _currentView: DateViewType;
 
     private intlChangesSub = Subscription.EMPTY;
@@ -362,6 +368,9 @@ export class OwlCalendarComponent<T>
             : this.dateTimeAdapter.addCalendarYears(this.pickerMoment, -1);
 
         this.pickerMomentChange.emit(this.pickerMoment);
+        if (this.isMonthView) {
+            this.monthChanged.emit(this.pickerMoment);
+        }
     }
 
     /**
@@ -373,6 +382,9 @@ export class OwlCalendarComponent<T>
             : this.dateTimeAdapter.addCalendarYears(this.pickerMoment, 1);
 
         this.pickerMomentChange.emit(this.pickerMoment);
+        if (this.isMonthView) {
+            this.monthChanged.emit(this.pickerMoment);
+        }
     }
 
     public dateSelected(date: T): void {
@@ -411,12 +423,20 @@ export class OwlCalendarComponent<T>
      * Change the pickerMoment value
      */
     public handlePickerMomentChange(date: T): void {
+        const previousMonth = this.pickerMoment;
         this.pickerMoment = this.dateTimeAdapter.clampDate(
             date,
             this.minDate,
             this.maxDate
         );
         this.pickerMomentChange.emit(this.pickerMoment);
+        
+        // Emit monthChanged if the month actually changed and we're in month view
+        if (this.isMonthView && previousMonth && 
+            (this.dateTimeAdapter.getYear(previousMonth) !== this.dateTimeAdapter.getYear(this.pickerMoment) ||
+             this.dateTimeAdapter.getMonth(previousMonth) !== this.dateTimeAdapter.getMonth(this.pickerMoment))) {
+            this.monthChanged.emit(this.pickerMoment);
+        }
         return;
     }
 
@@ -464,6 +484,8 @@ export class OwlCalendarComponent<T>
 
     public selectMonthInYearView(normalizedMonth: T): void {
         this.monthSelected.emit(normalizedMonth);
+        // Also emit monthChanged when selecting a month from year view
+        this.monthChanged.emit(normalizedMonth);
     }
 
     /**

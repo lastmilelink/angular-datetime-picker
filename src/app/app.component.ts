@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '../../projects/picker/src/public_api';
 import { CalendarAgenda } from '../../projects/picker/src/lib/date-time/calendar-agenda.class';
 
@@ -14,6 +15,7 @@ const ONE_DAY = 24 * 60 * 60 * 1000;
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FormsModule,
+    DatePipe,
     OwlDateTimeModule,
     OwlNativeDateTimeModule
   ]
@@ -27,6 +29,8 @@ export class AppComponent {
   ];
 
   protected selectedDateWithAgenda = new Date();
+
+  protected currentMonth = new Date();
 
   protected agendas: CalendarAgenda[] = [];
 
@@ -66,5 +70,13 @@ export class AppComponent {
 
   protected selectedTrigger(date: Date): void {
     console.log(date);
+  }
+
+  protected onMonthChanged(month: Date): void {
+    this.currentMonth = month;
+    console.log('Month changed to:', month.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long' 
+    }));
   }
 }

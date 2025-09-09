@@ -115,6 +115,37 @@ This mode is ideal for:
 </owl-date-time>
 ```
 
+## Month Change Event
+
+The date-time picker provides a `monthChanged` event that fires whenever the current viewing month changes.
+
+### Usage
+
+```typescript
+export class MyComponent {
+    currentMonth = new Date();
+
+    onMonthChanged(month: Date): void {
+        this.currentMonth = month;
+        console.log('Month changed to:', month.toLocaleDateString('en-US', { 
+            year: 'numeric', 
+            month: 'long' 
+        }));
+        
+        // Load data for the new month
+        this.loadMonthData(month);
+    }
+}
+```
+
+```html
+<owl-date-time
+    [startAt]="selectedDate"
+    (monthChanged)="onMonthChanged($event)"
+    (dateSelected)="onDateSelected($event)">
+</owl-date-time>
+```
+
 ## Animation
 
 This picker uses angular animations to improve the user experience,
@@ -197,6 +228,7 @@ There are two pre-made modules, users need to import one of them or build your o
 | `afterPickerClosed` | null      | Callback to invoke when the picker is closed.                                                   |
 | `yearSelected`      | T         | Callback to invoke when the year is selected.This doesn't imply a change on the selected date.  |
 | `monthSelected`     | T         | Callback to invoke when the month is selected.This doesn't imply a change on the selected date. |
+| `monthChanged`      | T         | Callback to invoke when the current viewing month changes (navigation, month selection).        |
 | `dateClicked`       | T         | Callback when the selected data changes.                                                        |
 | `selectedChanged`   | T         | Callback when the currently selected data changes.                                              |
 | `userSelection`     | null      | Callback when any date is selected.                                                             |
