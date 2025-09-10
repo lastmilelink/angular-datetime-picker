@@ -22,6 +22,7 @@
             [hideOtherMonths]="picker.hideOtherMonths"
             (yearSelected)="picker.selectYear($event)"
             (monthSelected)="picker.selectMonth($event)"
+            (monthChanged)="picker.monthChanged.emit($event)"
             (dateClicked)="picker.selectDate($event)"
             (selectedChange)="dateSelected($event)"
         ></owl-date-time-calendar>
