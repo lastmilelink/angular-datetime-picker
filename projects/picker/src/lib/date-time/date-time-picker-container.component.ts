@@ -586,4 +586,19 @@ export class OwlDateTimeContainerComponent<T>
 
         this.cdRef.markForCheck();
     }
+
+    /**
+     * Refresh agendas and trigger change detection
+     * Use this method when updating agendas asynchronously (e.g., from server)
+     */
+    public refreshAgendas(): void {
+        if (this.calendar) {
+            this.calendar.refreshAgendas();
+        }
+        // Update agendas for selected date if there's a selected date
+        if (this.picker.selected) {
+            this.filterAgendasForSelectedDate(this.picker.selected);
+        }
+        this.cdRef.markForCheck();
+    }
 }

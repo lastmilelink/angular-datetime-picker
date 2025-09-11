@@ -522,4 +522,12 @@ export class OwlCalendarComponent<T>
             ? obj
             : null;
     }
+
+    /**
+     * Refresh agendas and trigger change detection
+     * Use this method when updating agendas asynchronously (e.g., from server)
+     */
+    public refreshAgendas(): void {
+        this.cdRef.markForCheck();
+    }
 }

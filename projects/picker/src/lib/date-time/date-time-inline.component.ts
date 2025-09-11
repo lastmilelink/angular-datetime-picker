@@ -368,4 +368,14 @@ export class OwlDateTimeInlineComponent<T> extends OwlDateTime<T>
      public selectDate(normalizedDate: T): void {
         this.dateSelected.emit(normalizedDate);
     }
+
+    /**
+     * Refresh agendas and trigger change detection
+     * Use this method when updating agendas asynchronously (e.g., from server)
+     */
+    public refreshAgendas(): void {
+        if (this.container) {
+            this.container.refreshAgendas();
+        }
+    }
 }
