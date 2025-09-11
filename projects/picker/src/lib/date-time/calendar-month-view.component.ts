@@ -703,4 +703,16 @@ export class OwlMonthViewComponent<T>
     private focusActiveCell() {
         this.calendarBodyElm.focusActiveCell();
     }
+
+    /**
+     * Refresh agendas and trigger change detection
+     * Use this method when updating agendas asynchronously (e.g., from server)
+     * This method will regenerate the calendar with the current agendas data
+     */
+    public refreshAgendas(): void {
+        if (this.initiated) {
+            this.generateCalendar();
+            this.cdRef.markForCheck();
+        }
+    }
 }

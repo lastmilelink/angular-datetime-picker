@@ -737,8 +737,18 @@ export class OwlDateTimeComponent<T> extends OwlDateTime<T>
                     originY: 'top',
                     overlayX: 'start',
                     overlayY: 'top',
-                    offsetY: -352
-                }
-            ]);
+                offsetY: -352
+            }
+        ]);
+    }
+
+    /**
+     * Refresh agendas and trigger change detection
+     * Use this method when updating agendas asynchronously (e.g., from server)
+     */
+    public refreshAgendas(): void {
+        if (this.pickerContainer) {
+            this.pickerContainer.refreshAgendas();
+        }
     }
 }

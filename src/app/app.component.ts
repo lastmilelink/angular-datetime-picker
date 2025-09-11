@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, signal, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from '../../projects/picker/src/public_api';
@@ -34,7 +34,9 @@ export class AppComponent {
 
   protected agendas: CalendarAgenda[] = [];
 
-  constructor() {
+  @ViewChild('month_change_demo_component') monthChangeDemoComponent: any;
+
+  constructor(private cdr: ChangeDetectorRef) {
     // Initialize with current month's agendas
     this.generateAgendasForMonth(new Date());
   }
@@ -67,16 +69,29 @@ export class AppComponent {
     // Generate different agenda patterns for each month
     const monthPatterns = this.getMonthPatterns(monthIndex);
     
-    // Generate agendas for random days in the month
-    const agendaDays = this.getRandomDays(daysInMonth, monthPatterns.agendaCount);
-    
-    agendaDays.forEach(day => {
-      const dayDate = new Date(year, monthIndex, day);
-      const agendasForDay = this.generateAgendasForDay(dayDate, monthPatterns);
-      this.agendas.push(...agendasForDay);
-    });
-    
-    console.log(`Generated ${this.agendas.length} agendas for ${month.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`);
+    // Simulate async data fetching (like from server)
+    this.agendas = [];
+    setTimeout(() => {
+      const newAgendas: CalendarAgenda[] = [];
+      
+      // Generate agendas for random days in the month
+      const agendaDays = this.getRandomDays(daysInMonth, monthPatterns.agendaCount);
+      
+      agendaDays.forEach(day => {
+        const dayDate = new Date(year, monthIndex, day);
+        const agendasForDay = this.generateAgendasForDay(dayDate, monthPatterns);
+        newAgendas.push(...agendasForDay);
+      });
+      
+      console.log(`Generated ${newAgendas.length} agendas for ${month.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`);
+
+      // Update agendas and refresh the calendar
+      this.agendas = [...newAgendas];
+      if (this.monthChangeDemoComponent) {
+        this.monthChangeDemoComponent.refreshAgendas();
+      }
+      this.cdr.markForCheck();
+    }, 500); // 500ms delay to simulate server response
   }
 
   private getMonthPatterns(monthIndex: number): { agendaCount: number; timeSlots: number[]; duration: number } {
