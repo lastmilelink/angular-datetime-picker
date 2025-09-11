@@ -61,8 +61,18 @@ export class OwlMonthViewComponent<T>
     /**
      * Set the agenda list
      * */
+    private _agendas: CalendarAgenda[] = [];
     @Input()
-    public agendas: CalendarAgenda[] = [];
+    get agendas(): CalendarAgenda[] {
+        return this._agendas;
+    }
+    set agendas(value: CalendarAgenda[]) {
+        this._agendas = value;
+        if (this.initiated) {
+            this.generateCalendar();
+            this.cdRef.markForCheck();
+        }
+    }
 
     /**
      * Whether to hide dates in other months at the start or end of the current month.
@@ -598,7 +608,7 @@ export class OwlMonthViewComponent<T>
         const out = dayValue < 1 || dayValue > daysInMonth;
         const cellClass = 'owl-dt-day-' + this.dateTimeAdapter.getDay(date);
 
-        const agendas = this.agendas.filter(agenda => {
+        const agendas = this._agendas.filter(agenda => {
             const agendaDate = this.dateTimeAdapter.deserialize(agenda.start);
             return !!agendaDate && this.dateTimeAdapter.isSameDay(agendaDate, date);
         });
